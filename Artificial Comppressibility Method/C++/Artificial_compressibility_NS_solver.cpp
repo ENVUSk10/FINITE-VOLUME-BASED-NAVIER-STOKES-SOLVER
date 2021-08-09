@@ -307,7 +307,7 @@ for(int i = 0; i<grid_points;i++)
 
 // Output of Midline U velocity
 ofstream outfile;
-outfile.open("Residials.dat");
+outfile.open("Residuals.dat");
 if(outfile.is_open())
 {
     for(int i = 0; i<grid_points; i++)
