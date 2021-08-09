@@ -1,8 +1,14 @@
+/*
+2-D incompressible flow Navier-Stokes solver using the Artificial Compressibility method.
+Note : This code won't run for higher Reynolds numbers as the interpolation scheme used for advection terms in this code is central difference 
+Upwind scheme should be used to obtain the results for higher Reynolds number. 
+*/
 #include<bits/stdc++.h>
 using namespace std;
 int main()
 {
-double domain_size = 1, grids = 51;
+// Defining the Mesh
+double domain_size = 1, grids = 51;    
 double dx = domain_size/(grids-1);
 double dy = dx;
 double Beta = dx/dy;
@@ -12,9 +18,11 @@ double delta = 4.5;
 double pressure, advection_x, advection_y, diffusion;
 int grid_points = 51;
 
-double error_mag = 1,error_req = 1e-3;
+// Error definition
+double error_mag = 1,error_req = 1e-8;
 int iterations = 1;
 
+// Declaration of the variables (Collocated and Staggered)
 double u_final[grid_points][grid_points], v_final[grid_points][grid_points], p_final[grid_points][grid_points];
 double u[grid_points+1][grid_points], v[grid_points][grid_points+1], p[grid_points+1][grid_points+1];
 double u_new[grid_points+1][grid_points], v_new[grid_points][grid_points+1], p_new[grid_points+1][grid_points+1];
@@ -30,7 +38,7 @@ for (int i = 0; i<grid_points; i++)
 		{
 			u_final[i][j] = 1.0;
 			v_final[i][j] = 0.0;
-			p_final[i][j] = 1.0;
+			p_final[i][j] = 0.0;
 		
 		}
 		
@@ -38,7 +46,7 @@ for (int i = 0; i<grid_points; i++)
 		{
 			u_final[i][j] = 0.0;
 			v_final[i][j] = 0.0;
-			p_final[i][j] = 1.0;
+			p_final[i][j] = 0.0;
 		
 		}
 		
@@ -46,7 +54,7 @@ for (int i = 0; i<grid_points; i++)
 		{
 			u_final[i][j] = 0.0;
 			v_final[i][j] = 0.0;
-			p_final[i][j] = 1.0;
+			p_final[i][j] = 0.0;
 			
 		}
 		
@@ -54,7 +62,7 @@ for (int i = 0; i<grid_points; i++)
 		{
 			u_final[i][j] = 0.0;
 			v_final[i][j] = 0.0;
-			p_final[i][j] = 1.0;
+			p_final[i][j] = 0.0;
 	
 		}
 		
@@ -62,7 +70,7 @@ for (int i = 0; i<grid_points; i++)
 		{
 			u_final[i][j] = 0.0;
 			v_final[i][j] = 0.0;
-			p_final[i][j] = 1.0;
+			p_final[i][j] = 0.0;
 		}
 	
 	}
@@ -132,12 +140,13 @@ for (int i = 0; i<grid_points+1; i++)
 	{   
 		
 		
-		p[i][j] = 1.0;
-		p_new[i][j] = 1.0;
+		p[i][j] = 0.0;
+		p_new[i][j] = 0.0;
 	}
 
 }
 
+// Gauss iteration starts
 do 
 {
 	for (int i = 1; i<grid_points; i++)
@@ -174,6 +183,7 @@ do
 		}
 	}
 	
+	// y - momentum equation 
 	for (int i = 1; i<grid_points-1; i++)
     {	
 		for (int j = 1; j<grid_points; j++)
@@ -185,7 +195,8 @@ do
             v_new[i][j] = v[i][j] + dt*(diffusion - advection_x - advection_y + pressure);
         }
     }
-
+	
+	// Boundary conditions
 	for (int i = 0; i<grid_points; i++)
 	{
 		for(int j = 0; j<grid_points+1; j++)
@@ -208,7 +219,8 @@ do
 			
 		}
 	}
-	 
+	
+	// Continuity Equation
 	for (int i = 1; i<grid_points; i++)
 	{
 		for(int j = 1; j<grid_points; j++)
@@ -217,6 +229,8 @@ do
 			
 		}
 	}
+	
+
 	for (int i = 0; i<grid_points; i++)
 	{
 		for(int j = 0; j<grid_points+1; j++)
@@ -254,9 +268,9 @@ do
         }
     }
     
-	if(iterations%1000 == 1)
+	if(iterations%1000 == 0 || iterations == 1)
 	{	
-		cout << "Error after " << iterations << " " << error_mag << endl;
+		cout << "Residual error after " << iterations <<" iterations is" <<" " << error_mag << endl;
 	}
 	iterations+=1;
 	for (int i = 0; i<grid_points; i++)
@@ -272,6 +286,8 @@ do
 	}
 
 }while(error_mag > error_req);
+
+// Reverting back to the collocated grid
 for (int i  = 0; i<grid_points-1; i++)
 {    
 	for (int j = 0; j<grid_points; j++)
@@ -282,21 +298,23 @@ for (int i  = 0; i<grid_points-1; i++)
     }
 }
 
+// Creating Meshgrids
 for(int i = 0; i<grid_points;i++)
 {
-	y[i] = i*dx;
+	y[i] = i*dy;
+	x[i] = i*dx;
 }
 
+// Output of Midline U velocity
 ofstream outfile;
-outfile.open("velocity.dat");
-if(outfile.is_open()){
-    
-        for(int i = 0; i<grid_points; i++){
-            outfile << y[grid_points - (i+1) ] << " " << u_final[i][(grid_points+1)/2] << "  ";
-			outfile << endl;
-        }
-        
-    
+outfile.open("Residials.dat");
+if(outfile.is_open())
+{
+    for(int i = 0; i<grid_points; i++)
+	{
+		outfile << u_final[i][(grid_points+1)/2] << " " << x[i] << " " << y[grid_points - (i+1) ];
+		outfile << endl;
+    }
     outfile.close();
 }
 else cout << "ERROR";
