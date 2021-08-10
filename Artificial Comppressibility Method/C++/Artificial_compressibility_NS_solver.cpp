@@ -225,7 +225,7 @@ do
 	{
 		for(int j = 1; j<grid_points; j++)
 		{   
-			p_new[i][j] = p[i][j] - delta*dt*(u[i][j] - u[i][j-1] + v[i-1][j] - v[i][j])/dx;
+			p_new[i][j] = p[i][j] - delta*dt*(u_new[i][j] - u_new[i][j-1] + v_new[i-1][j] - v_new[i][j])/dx;
 			
 		}
 	}
