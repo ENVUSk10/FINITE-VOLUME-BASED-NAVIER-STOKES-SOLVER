@@ -1,7 +1,7 @@
 /*
 2-D incompressible flow Navier-Stokes solver using the Artificial Compressibility method.
-Note : This code won't run for higher Reynolds numbers as the interpolation scheme used for advection terms in this code is central difference 
-Upwind scheme should be used to obtain the results for higher Reynolds number. 
+Note : This code won't run for higher Reynolds numbers, for that you must to change dt and delta
+for Re = 400 try to run with use dt = 0.0001 delta = 100.0
 */
 #include<bits/stdc++.h>
 using namespace std;
@@ -34,23 +34,23 @@ for (int i = 0; i<grid_points; i++)
 	for(int j = 0; j<grid_points; j++)
 	{
 		
-		if (i == 0)
+		if (i == 0)					  // Top wall
 		{
 			u_final[i][j] = 1.0;
 			v_final[i][j] = 0.0;
-			p_final[i][j] = 0.0;
+			p_final[i][j] = 0.0;	 // You can Initialize the pressure to any value but should be equal throughout
 		
 		}
 		
-		else if (i == grid_points-1)
+		else if (i == grid_points-1) // Bottom Wall
 		{
 			u_final[i][j] = 0.0;
 			v_final[i][j] = 0.0;
-			p_final[i][j] = 0.0;
+			p_final[i][j] = 0.0;	
 		
 		}
 		
-		else if (j == 0)
+		else if (j == 0)			// Left Wall
 		{
 			u_final[i][j] = 0.0;
 			v_final[i][j] = 0.0;
@@ -58,7 +58,7 @@ for (int i = 0; i<grid_points; i++)
 			
 		}
 		
-		else if (j == grid_points-1)
+		else if (j == grid_points-1) // Right Wall
 		{
 			u_final[i][j] = 0.0;
 			v_final[i][j] = 0.0;
@@ -66,7 +66,7 @@ for (int i = 0; i<grid_points; i++)
 	
 		}
 		
-		else
+		else						// Interior Points
 		{
 			u_final[i][j] = 0.0;
 			v_final[i][j] = 0.0;
@@ -166,17 +166,17 @@ do
 	{
 		for(int j = 0; j<grid_points; j++)
 		{   
-			if(i == 0)
+			if(i == 0)								                        // Top Wall
 			{
 				u_new[i][j] = 2 - u_new[i+1][j];
 			}
 			
-			if(i == grid_points)
+			if(i == grid_points)					                        // Bottom Wall
 			{
 				u_new[i][j] = -u_new[i-1][j];;
 			}
 			
-			if((j == 0 || j == grid_points-1) && (i>0 && i<grid_points))
+			if((j == 0 || j == grid_points-1) && (i>0 && i<grid_points))	// Side Walls
 			{
 				u_new[i][j] = 0;;
 			}
@@ -201,17 +201,17 @@ do
 	{
 		for(int j = 0; j<grid_points+1; j++)
 		{   
-			if(i == 0 || i == grid_points - 1)
+			if(i == 0 || i == grid_points - 1)				   // Top and Bottom walls
 			{
 				v_new[i][j] = 0;
 			}
 			
-			if(j == 0 && i>0 && i<grid_points-1 )
-			{
+			if(j == 0 && i>0 && i<grid_points-1 )			  // Left Wall
+			{		
 				v_new[i][j] = -v_new[i][j+1];;
 			}
 			
-			if(j == grid_points && i>0 && i<grid_points-1 )
+			if(j == grid_points && i>0 && i<grid_points-1 )   // Right Wall
 			{
 				v_new[i][j] = -v_new[i][j-1];;
 			}
@@ -307,17 +307,16 @@ for(int i = 0; i<grid_points;i++)
 
 // Output of Midline U velocity
 ofstream outfile;
-outfile.open("Residuals.dat");
+outfile.open("MidVelocities.dat");
 if(outfile.is_open())
 {
     for(int i = 0; i<grid_points; i++)
 	{
-		outfile << u_final[i][(grid_points+1)/2] << " " << x[i] << " " << y[grid_points - (i+1) ];
+		outfile << u_final[i][(grid_points+1)/2] << " " << v_final[(grid_points+1)/2][i] <<  " "  << x[i] << " " << y[grid_points - (i+1) ];
 		outfile << endl;
     }
     outfile.close();
 }
 else cout << "ERROR";
+
 }
-
-
