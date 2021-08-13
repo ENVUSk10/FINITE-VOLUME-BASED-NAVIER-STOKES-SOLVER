@@ -312,7 +312,7 @@ if(outfile.is_open())
 {
     for(int i = 0; i<grid_points; i++)
 	{
-		outfile << u_final[i][(grid_points+1)/2] << " " << v_final[(grid_points+1)/2][i] <<  " "  << x[i] << " " << y[grid_points - (i+1) ];
+		outfile << u_final[i][(grid_points+1)/2] << "\t" << v_final[(grid_points+1)/2][i] <<  "\t"  << x[i] << "\t" << y[grid_points - (i+1) ];
 		outfile << endl;
     }
     outfile.close();
