@@ -19,7 +19,7 @@ double pressure, advection_x, advection_y, diffusion;
 int grid_points = 51;
 
 // Error definition
-double error_mag = 1,error_req = 1e-8;
+double error_mag = 1,error_req = 1e-7;
 int iterations = 1;
 
 // Declaration of the variables (Collocated and Staggered)
@@ -306,17 +306,37 @@ for(int i = 0; i<grid_points;i++)
 }
 
 // Output of Midline U velocity
-ofstream outfile;
-outfile.open("MidVelocities.dat");
-if(outfile.is_open())
+ofstream outfile1,outfile2;
+outfile1.open("Contour.dat");
+if(outfile1.is_open())
 {
-    for(int i = 0; i<grid_points; i++)
+	for (int j = 0 ; j < (grid_points) ; j++ )
 	{
-		outfile << u_final[i][(grid_points+1)/2] << "\t" << v_final[(grid_points+1)/2][i] <<  "\t"  << x[i] << "\t" << y[grid_points - (i+1) ];
-		outfile << endl;
+    for ( int i = 0 ; i < (grid_points) ; i++ )
+    {
+		double xpos, ypos;
+		xpos = (grid_points-i)*dx;
+		ypos = (grid_points-j)*dy;
+
+		outfile1 << xpos << "\t" << ypos << "\t" << u_final[i][j] << "\t" << v_final[i][j] << "\t" << p_final[i][j] ;
+		outfile1 << endl;
     }
-    outfile.close();
+		outfile1 << endl;
+	}
+	
+    outfile1.close();
 }
+outfile2.open("MidVelocities.dat");
+if(outfile2.is_open())
+{
+for(int i = 0; i<grid_points; i++)
+	{
+		outfile2 << u_final[i][(grid_points+1)/2] << "\t" << v_final[(grid_points+1)/2][i] <<  "\t"  << x[i] << "\t" << y[grid_points - (i+1) ];
+		outfile2 << endl;
+    }
+    outfile2.close();
+}
+
 else cout << "ERROR";
 
-}
+}	
