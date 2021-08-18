@@ -19,7 +19,7 @@ double pressure, advection_x, advection_y, diffusion;
 int grid_points = 51;
 
 // Error definition
-double error_mag = 1,error_req = 1e-7;
+double error_mag = 1,error_req = 1e-3;
 int iterations = 1;
 
 // Declaration of the variables (Collocated and Staggered)
@@ -310,15 +310,15 @@ ofstream outfile1,outfile2;
 outfile1.open("Contour.dat");
 if(outfile1.is_open())
 {
-	for (int j = 0 ; j < (grid_points) ; j++ )
+	for (int i = 0 ; i < (grid_points) ; i++ )
 	{
-    for ( int i = 0 ; i < (grid_points) ; i++ )
+    for ( int j = 0 ; j < (grid_points) ; j++ )
     {
 		double xpos, ypos;
-		xpos = (grid_points-i)*dx;
-		ypos = (grid_points-j)*dy;
+		xpos = i*dx;
+		ypos = j*dy;
 
-		outfile1 << xpos << "\t" << ypos << "\t" << u_final[i][j] << "\t" << v_final[i][j] << "\t" << p_final[i][j] ;
+		outfile1 << setprecision(4) <<  xpos << setprecision(4) << "\t" << setprecision(4) << ypos << "\t" << setprecision(4) << u_final[i][j] << "\t" << setprecision(4)<< v_final[i][j] << "\t" << p_final[i][j] ;
 		outfile1 << endl;
     }
 		outfile1 << endl;
