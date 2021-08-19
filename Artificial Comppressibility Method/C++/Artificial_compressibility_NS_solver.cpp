@@ -1,7 +1,7 @@
 /*
 2-D incompressible flow Navier-Stokes solver using the Artificial Compressibility method.
 Note : This code won't run for higher Reynolds numbers, for that you must to change dt and delta
-for Re = 400 try to run with use dt = 0.0001 delta = 100.0
+for Re = 400-5000 try to run with use dt = 0.0001 delta = 100.0
 */
 #include<bits/stdc++.h>
 using namespace std;
@@ -310,6 +310,11 @@ ofstream outfile1,outfile2;
 outfile1.open("Contour.dat");
 if(outfile1.is_open())
 {
+	outfile1 << "VARIABLES=\"X\",\"Y\",\"U\",\"V\",\"P\"" << endl;
+	outfile1 << "ZONE  F=POINT" << endl;
+	outfile1 << "I=" << grid_points << " " << "J=" << grid_points << endl;
+
+
 	for (int i = 0 ; i < (grid_points) ; i++ )
 	{
     for ( int j = 0 ; j < (grid_points) ; j++ )
@@ -318,7 +323,7 @@ if(outfile1.is_open())
 		xpos = i*dx;
 		ypos = j*dy;
 
-		outfile1 << setprecision(4) <<  xpos << setprecision(4) << "\t" << setprecision(4) << ypos << "\t" << setprecision(4) << u_final[i][j] << "\t" << setprecision(4)<< v_final[i][j] << "\t" << p_final[i][j] ;
+		outfile1 << setprecision(4) <<  x[grid_points - (i+1) ] << setprecision(4) << "\t" << setprecision(4) << y[grid_points - (j+1) ] << "\t" << setprecision(4) << u_final[i][j] << "\t" << setprecision(4)<< v_final[i][j] << "\t" << p_final[i][j] ;
 		outfile1 << endl;
     }
 		outfile1 << endl;
@@ -326,12 +331,14 @@ if(outfile1.is_open())
 	
     outfile1.close();
 }
-outfile2.open("MidVelocities.dat");
+outfile2.open("MidV.csv");
 if(outfile2.is_open())
 {
+	outfile << "Numerical" << "," <<  "Y" ;
+    outfile << endl;
 for(int i = 0; i<grid_points; i++)
 	{
-		outfile2 << u_final[i][(grid_points+1)/2] << "\t" << v_final[(grid_points+1)/2][i] <<  "\t"  << x[i] << "\t" << y[grid_points - (i+1) ];
+		outfile2 <<y[grid_points - (i+1) ] << "," <<  u_final[i][(grid_points+1)/2] ;
 		outfile2 << endl;
     }
     outfile2.close();
