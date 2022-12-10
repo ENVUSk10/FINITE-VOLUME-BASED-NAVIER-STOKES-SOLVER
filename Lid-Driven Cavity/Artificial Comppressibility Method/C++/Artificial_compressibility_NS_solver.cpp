@@ -334,8 +334,8 @@ if(outfile1.is_open())
 outfile2.open("MidV.csv");
 if(outfile2.is_open())
 {
-	outfile << "Numerical" << "," <<  "Y" ;
-    outfile << endl;
+	outfile2 << "Numerical" << "," <<  "Y" ;
+    outfile2 << endl;
 for(int i = 0; i<grid_points; i++)
 	{
 		outfile2 <<y[grid_points - (i+1) ] << "," <<  u_final[i][(grid_points+1)/2] ;
