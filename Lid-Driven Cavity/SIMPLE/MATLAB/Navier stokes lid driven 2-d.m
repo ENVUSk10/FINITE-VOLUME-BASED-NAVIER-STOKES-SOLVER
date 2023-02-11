@@ -1,3 +1,4 @@
+%% Developer 1 has made the changes
 clear all
 close all
 clc
