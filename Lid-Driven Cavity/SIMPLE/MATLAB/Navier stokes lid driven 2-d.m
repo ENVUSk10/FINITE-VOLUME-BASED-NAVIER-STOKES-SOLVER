@@ -1,6 +1,7 @@
 %% Developer 1 has made the changes
 %% lets see the changes
-%%I have added this another file
+%% I have added this another file
+%% am Pushing to master
 clear all
 close all
 clc
