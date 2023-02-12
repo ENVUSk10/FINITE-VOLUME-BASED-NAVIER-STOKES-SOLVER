@@ -1,7 +1,7 @@
 clear all
 close all
 clc
-made changes in Master from newname
+made changes in Newname from newname so that the dev2 can find this.
 %% DEFINING THE MESH
 grid_points =51;
 dom_length = 1;
