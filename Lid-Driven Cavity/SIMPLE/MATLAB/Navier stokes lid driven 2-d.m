@@ -1,6 +1,7 @@
 clear all
 close all
 clc
+made changes in Master from newname
 %% DEFINING THE MESH
 grid_points =51;
 dom_length = 1;
